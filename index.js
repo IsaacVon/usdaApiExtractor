@@ -1,7 +1,6 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
-const zipCodes = require('./zipCodes.json');
-
+const zipCodes = require("./zipCodes.json");
 
 mongoose
   .set("useUnifiedTopology", true)
@@ -17,20 +16,19 @@ const zipCodeZoneSchema = new mongoose.Schema({
   zipcode: { type: String, maxlength: 10000 },
   zone: { type: String, maxlength: 10 },
   rangemin: { type: String, maxlength: 10 },
-  rangemax: { type: String, maxlength: 10 }
-
+  rangemax: { type: String, maxlength: 10 },
 });
 
 const ZipCodeZone = mongoose.model("ZipCodeZone", zipCodeZoneSchema);
 
-const createZipCodeZone = async(zipCodeData) => {
-  const zipCodeZone = new ZipCodeZone(
-    zipCodeData,
-  );
+// Adds zipCodeData to mongoose database
+const createZipCodeZone = async (zipCodeData) => {
+  const zipCodeZone = new ZipCodeZone(zipCodeData);
   const result = await zipCodeZone.save();
-  console.log(result)
-}
+  console.log(result);
+};
 
+// Takes API data and builds object that matches schema
 const zipCodeToPlants = async (zipCode) => {
   try {
     let zipCodeData = await requestZipCodeData(zipCode);
@@ -46,9 +44,9 @@ const zipCodeToPlants = async (zipCode) => {
   } catch (err) {}
 };
 
+// API Call for single zipcode information
 const requestZipCodeData = async (zipCode) => {
   try {
-    // console.log("2 requestZipCodeData running...");
     const zipCodeUrl =
       "https://c0bra.api.stdlib.com/zipcode-to-hardiness-zone/?zipcode=" +
       zipCode;
@@ -60,28 +58,18 @@ const requestZipCodeData = async (zipCode) => {
   }
 };
 
+// Check Zip code from newly created database --- --- --- --- --- --- --- --- ---
+// async function getZone(zipCode) {
+//   const zoneInfo = await ZipCodeZone.find({ zipcode: zipCode });
+//   console.log(zoneInfo);
+// }
 
+// getZone(92879);
 
+// API Extractor --- --- --- --- --- --- --- --- ---
+// Loop through every zipCode in zipCodes.json file and requestZipCodeData on each zip.
 
-// Check Zip
-async function getZone(zipCode) {
- const zoneInfo = await ZipCodeZone
-  .find({ zipcode: zipCode })
- 
- console.log(zoneInfo)
-}
-
-
-getZone(92879);
-
-
-
-
-
-
-// Master Extractor
 // let i;
-
 // const masterSearch = async () => {
 //   for (i = 0; i < zipCodes.zipCodeList.length; i++) {
 //     await zipCodeToPlants(zipCodes.zipCodeList[i].Zipcode)
@@ -89,4 +77,3 @@ getZone(92879);
 // }
 
 // masterSearch()
-
