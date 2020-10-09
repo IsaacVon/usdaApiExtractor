@@ -1,5 +1,7 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
+const zipCodes = require('./zipCodes.json');
+
 
 mongoose
   .set("useUnifiedTopology", true)
@@ -12,10 +14,11 @@ mongoose
   .catch((err) => console.error("Could not connect to MongoDB...", err));
 
 const zipCodeZoneSchema = new mongoose.Schema({
-  zipcode: { type: String, required: true, maxlength: 10000 },
-  zone: { type: String, required: true, unique: true, maxlength: 10 },
-  rangemin: { type: String, required: true, maxlength: 10 },
-  rangemax: { type: String, required: true, maxlength: 10 },
+  zipcode: { type: String, maxlength: 10000 },
+  zone: { type: String, maxlength: 10 },
+  rangemin: { type: String, maxlength: 10 },
+  rangemax: { type: String, maxlength: 10 }
+
 });
 
 const ZipCodeZone = mongoose.model("ZipCodeZone", zipCodeZoneSchema);
@@ -24,9 +27,8 @@ const createZipCodeZone = async(zipCodeData) => {
   const zipCodeZone = new ZipCodeZone(
     zipCodeData,
   );
-
   const result = await zipCodeZone.save();
-  console.log(result);
+  console.log(result)
 }
 
 const zipCodeToPlants = async (zipCode) => {
@@ -40,7 +42,6 @@ const zipCodeToPlants = async (zipCode) => {
       rangemax: zipCodeData.rangemax,
     };
 
-    console.log("zipCodeData", zipCodeData);
     createZipCodeZone(zipCodeData);
   } catch (err) {}
 };
@@ -61,9 +62,31 @@ const requestZipCodeData = async (zipCode) => {
 
 
 
-// Run every zipcode through this
-zipCodeToPlants(92618);
 
-const zipCodes[
-  
-]
+// Check Zip
+async function getZone(zipCode) {
+ const zoneInfo = await ZipCodeZone
+  .find({ zipcode: zipCode })
+ 
+ console.log(zoneInfo)
+}
+
+
+getZone(92879);
+
+
+
+
+
+
+// Master Extractor
+// let i;
+
+// const masterSearch = async () => {
+//   for (i = 0; i < zipCodes.zipCodeList.length; i++) {
+//     await zipCodeToPlants(zipCodes.zipCodeList[i].Zipcode)
+//   }
+// }
+
+// masterSearch()
+
