@@ -1,0 +1,1 @@
+This was created to download an API. Somebody found a workaround to the captcha on for the USDA Plant Hardiness Zone Map. This workaround might not work forever, and WhatGrows.org relies on this API to run properly. This ran every United states zip code through their API and downloaded their results to a MongoDB database. 
